@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import sqlite3
 
 def extract(file_path: str) -> pd.DataFrame:
     """
@@ -72,18 +73,26 @@ def transform(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def load(df: pd.DataFrame, output_path: str) -> None:
+def load(df: pd.DataFrame, db_name: str, table_name: str) -> None:
     """
-    Load the transformed data into a CSV file.
+    Load the transformed data into a SQLite database.
 
     Args:
-        df (pd.DataFrame): The DataFrame to save.
-        output_path (str): Path to save the transformed data.
-    """
-    print(f"Loading data to {output_path}...")
-    df.to_csv(output_path, index=False)
-    print(f"Data successfully loaded to {output_path}.")
+        df (pd.DataFrame): The DataFrame to load.
+        db_name (str): The name of the database.
+        table_name (str): The name of the table.
 
+    """
+    try:
+        # Connect to SQLite database
+        conn = sqlite3.connect(db_name)
+        # write the df to the specified table (if it doesn't exist, it will be created)
+        df.to_sql(table_name, conn, if_exists='replace', index=False)
+        print(f"Data loaded into table '{table_name}' in database '{db_name}'.")
+    except Exception as e:
+        print(f"Error: Could not load data into SQLite database. {e}")
+    finally:
+        conn.close()
 
 if __name__ == "__main__":
     # Get the root directory of the project

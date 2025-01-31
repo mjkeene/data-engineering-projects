@@ -3,7 +3,8 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import pandas as pd
 import pytest
-from src.etl_pipeline import extract
+from src.etl_pipeline import extract, load
+import sqlite3
 
 
 @pytest.fixture
@@ -74,3 +75,19 @@ def test_extract_invalid_file_format(invalid_csv_file):
     """
     with pytest.raises(pd.errors.ParserError):
         extract(invalid_csv_file)
+
+
+def test_load_data_into_sqlite(valid_csv_file):
+    """
+    Test loading the data into SQLite.
+    """
+    df = extract(valid_csv_file)
+    load(df, "test_sqlite_db", "movies")
+
+    # Verify that the data is correctly inserted into the SQLite database
+    conn = sqlite3.connect("test_sqlite_db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM movies")
+    row_count = cursor.fetchone()[0]
+    assert row_count == len(df)
+    conn.close()

@@ -34,6 +34,7 @@ Build a pipeline that:
 
 
 <h4>Repository Structure</h4>
+
 ```
 csv_to_sqlite_data_pipeline/
 │
