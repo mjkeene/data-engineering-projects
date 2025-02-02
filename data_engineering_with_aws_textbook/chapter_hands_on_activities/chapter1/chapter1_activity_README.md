@@ -1,4 +1,4 @@
-<h3>Chapter 1 Hands-on Activity: Creating and Accessing AWS Account</h3>
+<h2>Chapter 1 Hands-on Activity: Creating and Accessing AWS Account</h2>
 
 
 * Some of the services used in this book will fall under AWS Free Tier usage, and some will not.
@@ -10,6 +10,7 @@
 
 
 <h3>Account Best Practices</h3>
+
 * Do not use the <i>root user</i> unless absolutely necessary (e.g., creating your first IAM user, deleting the 
   account, or changing account settings).
 * Create an `Admin` user for day-to-day activities.
@@ -18,6 +19,7 @@
 
 
 <h3>Region Selection Considerations</h3>
+
 * Which region should you use?
   * Refer to this [AWS blog post](https://aws.amazon.com/blogs/architecture/what-to-consider-when-selecting-a-region-for-your-workloads/).
   * In summary, use the following four areas to determine region:
