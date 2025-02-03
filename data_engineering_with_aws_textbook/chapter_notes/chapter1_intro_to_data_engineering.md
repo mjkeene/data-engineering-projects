@@ -2,6 +2,7 @@
 
 
 <h3>The rise of big data as a corporate asset</h3>
+
 * Data engineering continues to be a fast-growing career path and a role in high demand, as data becomes ever more
 critical to organizations of all sizes.
 * This chapter will cover the many ways that data engineering has become an important, and increasingly valuable,
@@ -20,6 +21,7 @@ for an organization.
 
 
 <h3>The challenges of ever-growing datasets</h3>
+
 * Today, with the modern application development approach of microservices, companies commonly have hundreds, or even
 thousands, of databases. Faced with many data silos, organizations invested in data warehousing systems that would 
   enable them to ingest data from multiple siloed databases into a central location for analytics.
@@ -36,6 +38,7 @@ thousands, of databases. Faced with many data silos, organizations invested in d
 
 
 <h4>Data Lakes and Data Mesh</h4>
+
 * In parallel with the rise of Apache Spark as a popular big data processing tool was the rise of the concept of 
   data lakes -- an approach that uses low-cost object storage as a physical storage layer for a variety of data 
   types, Apache Hive as a central catalog of all the datasets, and makes that data available for processing with a 
@@ -68,9 +71,9 @@ thousands, of databases. Faced with many data silos, organizations invested in d
 <h3>Understanding the role of the data engineer</h3>
 
 The role of a <b>data engineer</b> is to do the following:
-* Design, implement, and maintain the pipelines that enable the ingestion of raw data into a storage platform.
-* Transform that data to be optimized for analytics, based on data consumer requirements.
-* Make that data available for various data consumers using their tool of choice.
+1. Design, implement, and maintain the pipelines that enable the ingestion of raw data into a storage platform. 
+2. Transform that data to be optimized for analytics, based on data consumer requirements. 
+3. Make that data available for various data consumers using their tool of choice.
 
 
 * Data engineers must first design the pipelines that ingest raw data from various internal and external sources.
@@ -93,6 +96,7 @@ The role of a <b>data engineer</b> is to do the following:
 
 
 <h3>Understanding other common data-related roles</h3>
+
 * Organizations may have other role titles and job descriptions for data-related positions, but generally, these 
   will be a subset of the roles described above.
   * Big data architect or data platform architect could be a subset of the data engineer role, focused on designing 
@@ -105,6 +109,7 @@ The role of a <b>data engineer</b> is to do the following:
 
 
 <h3>The benefits of using the cloud when building big data analytic solutions</h3>
+
 * Cloud computing enables scalability, cost efficiency, security, and automation that most companies find impossible 
   to achieve within their own data centers, and this applies to the area of data analytics as well.
 * <b>Successful data engineers need to understand the tools available in the cloud for building out complex data 
