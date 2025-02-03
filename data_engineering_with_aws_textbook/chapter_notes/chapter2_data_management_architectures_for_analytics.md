@@ -117,9 +117,8 @@
   * One or more data warehouses (and, optionally, multiple subject-focused data marts).
   * End user analytic tools for consuming data from the warehouse (such as SQL-based analytic tools, and business 
     intelligence visualization systems).
-
-
-TODO: insert data warehouse architecture diagram
+    
+![Screenshot 2025-02-02 at 10 47 22 PM](https://github.com/user-attachments/assets/05f507db-7114-4508-b106-c93d4f6c9aee)
 
 <h3>Dimensional modeling in data warehouses</h3>
 
@@ -127,8 +126,8 @@ TODO: insert data warehouse architecture diagram
   dimensional models, such as a <b>star schema</b> or <b>snowflake schema</b>. Storing data in a warehouse using a 
   dimensional model makes it easier to retrieve and filter relevant data, and it also makes analytic query 
   processing flexible, simple, and performant.
-
-TODO: insert star schema diagram
+  
+![Screenshot 2025-02-02 at 10 49 30 PM](https://github.com/user-attachments/assets/7c811b79-749c-46f9-af70-fcc7f4367e92)
 
 <b>Star schema</b>
 
@@ -153,8 +152,8 @@ TODO: insert star schema diagram
   * For larger dimension tables, a denormalized approach can lead to data duplication and inconsistencies within the 
     dimension table. Large denormalized dimension tables can be slow to update.
   * One approach to work around these issues is a slightly modified type of schema, the <b>snowflake schema</b>.
-
-TODO: insert snowflake schema diagram
+  
+![Screenshot 2025-02-02 at 10 59 25 PM](https://github.com/user-attachments/assets/b455df58-4780-4d90-840b-53792079ae0a)
 
 <b>Snowflake schema</b>
 
@@ -240,8 +239,8 @@ repeated.
 
 * Below is the underlying architecture of a <b>Redshift</b> cluster. This shows a Redshift cluster based on <b>RA3 
   nodes</b>.
-
-TODO: insert Redshift diagram.
+  
+![Screenshot 2025-02-02 at 11 31 22 PM](https://github.com/user-attachments/assets/abe68376-148f-4f0a-8ec4-9c8674ce55d0)
 
 * The leader node interfaces with client applications, receives and parses queries, and coordinates query executions 
   on compute nodes.
@@ -262,7 +261,7 @@ TODO: insert Redshift diagram.
     up full-row lookups and updates, OLTP databases use a row-oriented layout to store table rows on the disk. In a 
     <b>row-oriented</b> physical data layout, all the column values of a given row are co-located, as seen below.
 
-TODO: insert row-based storage diagram
+![Screenshot 2025-02-02 at 11 37 18 PM](https://github.com/user-attachments/assets/0112156e-dc3c-40f9-b97a-836ea8e0ae89)
 
 * Most analytic queries against a data warehouse are written to answer a specific question and typically include 
   grouping or aggregations on a large number of rows, but a narrow set of columns from the fact and dimension tables.
@@ -277,7 +276,7 @@ TODO: insert row-based storage diagram
     time and lays out data from that row chunk, one column at a time, so that all the values for a column (that is, 
     for that row chunk) are physically co-located on the disk, as seen below.
 
-TODO: insert column-oriented storage diagram
+![Screenshot 2025-02-03 at 12 49 53 AM](https://github.com/user-attachments/assets/fb75f045-27c6-44de-a79b-dfc191249bd5)
 
 ```
 Example: Row vs. Column Storage Impact
@@ -315,7 +314,7 @@ A single Redshift query CAN hog resources, but you can prevent this by:
 * In these pipelines, the first step is to extract data from source systems, but the next two steps can either take 
   place in a Transform-Load or Load-Transform sequence (ETL or ELT).
 
-TODO: insert ETL pipeline diagram
+![Screenshot 2025-02-03 at 12 02 28 AM](https://github.com/user-attachments/assets/98799f8c-1651-4752-b0ae-9c202ef5ea30)
 
 * With an ETL pipeline, transformations are performed outside the data warehouse using custom scripts, a 
   cloud-native ETL service such as AWS Glue, or a specialized ETL tool from a commercial vendor such as Informatica, 
@@ -333,7 +332,7 @@ TODO: insert ETL pipeline diagram
   transformation operations on the staged data and writes the transformed data to a production table (ready for 
   consumption).
 
-TODO: insert ELT pipeline
+![Screenshot 2025-02-03 at 12 06 27 AM](https://github.com/user-attachments/assets/995ff878-17bc-42a0-9565-4ae5937debce)
 
 * ELT is typically leveraged when the following are true:
   * Data sources and the warehouse have similar database technologies, making it easier to directly load source data 
@@ -366,7 +365,7 @@ TODO: insert ELT pipeline
   and enables diverse analytic tools, including SQL, code-based tools (such as Apache Spark), specialized machine 
   learning tools, and business intelligence visualization tools.
 
-TODO: insert data lake architecture diagram
+![Screenshot 2025-02-03 at 12 13 47 AM](https://github.com/user-attachments/assets/42db40b4-ef0b-4ed3-bc9a-40a4acfe1eac)
 
 <h3>Data lake logical architecture</h3>
 
