@@ -5,15 +5,16 @@ building data pipelines, working with databases, processing large datasets, and 
 
 <h3>Projects</h3>
 
-| **Project Name**                                             | **Description**                                                                          | **Technologies Used**          |
-|--------------------------------------------------------------|------------------------------------------------------------------------------------------|--------------------------------|
-| [CSV to SQLite Data Pipeline](./csv_to_sqlite_data_pipeline) | A lightweight pipeline to extract, clean, and load CSV data into an SQLite database.   | Python, Pandas, SQLite         |
-| *Upcoming Project*                                           | Placeholder for my next project! Stay tuned.                                            | TBD                            |
-| *Upcoming Project*                                           | Placeholder for my next project! Stay tuned.                                            | TBD                            |
+| **Project Name**                                                  | **Description**                                                                     | **Technologies Used**  |
+|-------------------------------------------------------------------|-------------------------------------------------------------------------------------|------------------------|
+| [CSV to SQLite Data Pipeline](./csv_to_sqlite_data_pipeline)      | A lightweight pipeline to extract, clean, and load CSV data into an SQLite database. | Python, Pandas, SQLite |
+| [Data Engineering with AWS](./data_engineering_with_aws_textbook) | Data engineering with AWS notes and chapter activities building data pipelines   | AWS                    |
+| *Upcoming Project*                                                | Placeholder for my next project! Stay tuned.                                        | TBD                    |
 
 
 <h3>Skills Highlighted</h3>
 
+* AWS: Using AWS services for data engineering projects.
 * Data Pipelines: End-to-end pipelines to extract, transform, and load data.
 * Database Management: Working with SQL databases like SQLite and PostgreSQL.
 * Data Cleaning: Handling messy, real-world data using Python libraries.
