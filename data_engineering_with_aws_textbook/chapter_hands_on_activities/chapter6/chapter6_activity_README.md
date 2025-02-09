@@ -74,7 +74,80 @@ LIMIT 20;
 
 * Make sure to delete the DMS replication instance and resources deployed by cfn template.
 
+---
+
+---
 <h3>Ingesting streaming data</h3>
 
-* 
+* AWS provides an open source solution for streaming sample data into Kinesis; we will use the Kinesis service to 
+  ingest streaming data.
+  * To generate the data, we'll use Kinesis Data Generator (KDG)
+* High-level, we will complete the following tasks:
+1. Configure <b>Kinesis Data Firehose</b> to ingest streaming data, and write the data out to S3.
+2. Configure <b>KDG</b> to create mock streaming data.
 
+* Let's configure the Kinesis Data Firehose instance first.
+* Create a delivery stream named `dataeng-firehose-streaming-s3`
+  * We'll leave the optional <b>Transform and convert records</b> unchecked. <b>Transform source records with AWS 
+    Lambda</b> functionality can be used to run data validation tasks or perform light processing on incoming data 
+    with AWS Lambda, but we don't want to do any processing here.
+  * <b>Convert record format</b> can be used to convert incoming data into Apache Parquet or Apache ORC format. We'd 
+    need to specify the schema of the incoming data upfront to do this though.
+* By default, Kinesis Data Firehose writes the data to S3 with a prefix to split incoming data by `YYYY/MM/dd/HH`. 
+  We want to load streaming data into a "streaming" prefix, and only want the data split by the year and month it 
+  was ingested. Set the S3 bucket prefix to `streaming/!{timestamp:yyyy/MM/}`. 
+  * We must now also set a custom error prefix since we set a custom prefix for incoming data. Set this to
+     `!{firehose:error-output-type}/!{timestamp:yyyy/ MM/}`
+
+
+* <b>The S3 buffer conditions allow us to control the parameters for how long Kinesis buffers incoming data before 
+  writing it out to our target. We specify both a buffer size (in MB), and a buffer interval (in seconds), and 
+  whichever is reached first will trigger Kinesis to write to the target.</b>
+
+
+* Set the Buffer size to 1MB and Buffer interval to 60 seconds.
+
+<h3>Configuring the Kinesis Data Generator (KDG)</h3>
+
+* We will simulate data with KDG that includes:
+  * streaming timestamp
+  * rented, purchased, or watched the trailer
+  * `film_id` that matches the Sakila film database (we'll later join these datasets)
+  * distribution partner's name
+  * streaming platform
+  * state the movie was streamed in
+
+* To use KDG, you need an Amazon Cognito user in your AWS account, an then use that user to log into KDG on the 
+  GitHub account.
+* https://awslabs.github.io/amazon-kinesis-data-generator/web/help.html
+* Follow the instructions on this link, and then enter the `record_template_kinesis_data_generator.json` for the 
+  record template.
+* Specify 20 records per second, and leave it running for 5-10 mins to get ~10,000 records. I stopped at 10,420 
+  records.
+
+<h3>Adding newly ingested data to the Glue Data Catalog</h3>
+
+* Run a <b>Glue crawler</b> to examine the newly ingested data, infer the schema, and automatically add the data to 
+  the Glue Data Catalog.
+  * Once we do this, we can query the newly ingested data using services such as <b>Amazon Athena</b>.
+* Navigate to the Glue console, create a new crawler.
+  * Name it `dataeng-streaming-crawler`
+  * Add the data source as the streaming s3 bucket: `s3://dataeng-landing-zone-mjk25/streaming/`
+    * Make sure to include the trailing slash
+  * Add a new database, `streaming_db`
+* Run the crawler. When it finishes, there will be a table for the newly ingested streaming data.
+
+<h3>Querying the data with Athena</h3>
+
+* You can see the data coming in at near real-time. I ran the below query every 60-90 seconds, and the results 
+  show the growing row count in the table, as well as the more recent timestamps. 
+
+```sql
+select count(*), max(timestamp)
+from streaming
+
+-- 7520 | 2025-02-09T11:14:16-07:00
+-- 8180 | 2025-02-09T11:15:46-07:00
+-- 8780 | 2025-02-09T11:16:50-07:00
+-- 10420 | 2025-02-09T11:18:26-07:00
+```
