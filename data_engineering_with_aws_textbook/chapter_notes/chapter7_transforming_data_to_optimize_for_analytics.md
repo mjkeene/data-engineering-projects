@@ -154,6 +154,118 @@
 
 <b>Optimizing with data partitioning</b>
 
-* 
+* Another common approach for optimizing datasets for analytics is to <b>partition</b> the data, which relates to 
+  how the data files are organized in the storage system for a data lake.
+* <b>Hive partitioning</b> splits the data from a table to be grouped together in different folders, based on one or 
+  more of the columns in the dataset.
+  * A common column used is the date.
 
-Leaving off on p. 213
+```
+datalake_bucket/year=2023/file1.parquet
+datalake_bucket/year=2022/file1.parquet
+datalake_bucket/year=2021/file1.parquet
+datalake_bucket/year=2020/file1.parquet
+```
+
+* If a SQL query is run against this with `WHERE year = 2020`, the analytics engine would only open up the single 
+  file in the `datalake_bucket/year=2020/` folder.
+* Less data is scanned, so it costs less and completes quicker.
+
+* Note that deciding which column to partition on requires a good understanding of how the dataset will be used. If 
+  you partition based on year, but the majority of queries are across all years, then this partitioning strategy 
+  would not be effective.
+  * Having many partitions can also slow queries that do not utilize them, since the analytics engine needs to read 
+    data in all partitions — there is overhead in working between the different folders.
+* You can partition across multiple columns to get more granular. Example:
+
+```
+datalake_bucket/year=2021/month=6/day=1/file1.parquet
+```
+
+* Be careful to not end up with a large number of very small files. The optimal size for each Parquet file in a data 
+  lake is between 128MB and 1GB.
+  * The Parquet file format can be split, which means that multiple nodes in a cluster can process data from a file 
+    in parallel. 
+  * However, having lots of small files requires a lot of overhead for opening files, reading metadata, 
+    scanning data, and closing each file — all of which can end up significantly impacting performance.
+* It is generally better to have fewer partitions with larger files than hundreds or thousands of partitions with 
+  small files (e.g., a few MB each).
+
+
+<b>Data cleansing</b>
+
+* Optimizing the data format and partitioning data are transformation tasks that work on the format and structure of 
+  the data, but do not directly transform the data.
+  * Cleansing, however, is a transformation that alters parts of the 
+    data.
+* Some common data transformation tasks for data cleansing:
+1. <b>Ensuring consistent column names</b>: Different sources may have the same data with different names (e.g. 
+   `date_of_birth` vs. `birthdate`)
+2. <b>Changing column data types</b>: It's important that a column has consistent data types for analytics. A column 
+   of integers should not include a string, which can cause a query to fail. Cleansing this may consist of replacing 
+   the string with a `NULL` value.
+3. <b>Ensuring a standard column format</b>: Like the column names, data may have different formats (e.g., 
+   `MM-DD-YYYY` vs. `DD-MM-YYYY` for dates). Convert them all to be consistent.
+4. <b>Removing duplicate records</b>: Identify, and either flag or remove duplicates.
+5. <b>Providing missing values</b>: Various strategies here. Can replace missing values with a valid value (average, 
+   median, NULL, etc.). Can also remove any rows that have missing values for specific columns. How to handle this 
+   depends on the specific dataset and the ultimate analytics use case.
+
+
+* The AWS Glue DataBrew service has been designed to provide an easy way to cleanse and normalize data using a 
+  visual design tool. It includes over 250 common data cleansing transformations.
+
+
+<h3>Common business use case transformations</h3>
+
+* In a data lake environment, you ingest raw data from many different source systems into a landing, or raw, zone. 
+  You then optimize the file format and partition the dataset, as well as doing any cleansing, potentially moving 
+  the data into a "clean" zone. 
+* <b>These initial transforms can be done without understanding too much about how the data is ultimately being used by 
+  the business.</b>
+* Eventually, however, a data engineer will need to use a variety of these ingested data sources to deliver value to 
+  the business for a specific use case. After all, the whole point of the data lake is to bring varied data sources 
+  from across the business to a central location, to enable new insights to be drawn from across these datasets.
+* The transformations discussed below work across multiple datasets to enrich, denormalize, and aggregate the data 
+  based on the specific business use case requirements.
+
+<b>Data denormalization</b>
+
+* Source data systems, especially those from relational database systems, are mostly going to be highly normalized. 
+  Each table has been designed to contain information about a specific entity or topic, and will then link to other 
+  topics with related information through the use of foreign keys.
+* Structuring tables this way has write-performance advantages for <b>Online Transaction Processing (OLTP)</b> 
+  systems and also helps to ensure the referential integrity of the database.
+  * <i>Normalized tables also consume less disk space, since data is not repeated across multiple tables. This was a 
+    larger benefit in the early days of databases when storage was limited and expensive, but it is not a 
+    significant benefit today with low-cost storage options.</i>
+* When it comes to <b>Online Analytical Processing (OLAP)</b> queries, having to join the data across multiple 
+  tables does incur a performance hit.
+  * Therefore, data is often denormalized for analytics purposes.
+  * Within a denormalized table, you often do not have to do any joins to determine details of multiple entities.
+* It is important to understand the use case requirements and how the data will be used, and then determine the 
+  right table structure for these denormalized tables.
+* These denormalization transforms can be done with Apache Spark, GUI-based tools, or SQL. AWS Glue Studio can also 
+  be used to design these kinds of table joins using a visual interface.
+
+<b>Enriching data</b>
+
+* Similar to joining tables for denormalization purposes, another common transform is to join tables for the purpose 
+  of enriching the original dataset.
+* Combining data with more data from third parties, or with data from other parts of the business can increase a 
+  dataset's value.
+* For example, a company that knows that its sales are impacted by weather conditions may purchase historical and 
+  future weather forecast data to help them analyze and forecast sales.
+* AWS provides a data marketplace called <b>AWS Data Exchange</b>, which is a catalog of datasets available via paid 
+  subscription, as well as a number of free datasets.
+  * 
+
+
+
+
+
+
+
+
+
+
