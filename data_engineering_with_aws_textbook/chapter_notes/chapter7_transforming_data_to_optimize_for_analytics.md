@@ -258,14 +258,63 @@ datalake_bucket/year=2021/month=6/day=1/file1.parquet
   future weather forecast data to help them analyze and forecast sales.
 * AWS provides a data marketplace called <b>AWS Data Exchange</b>, which is a catalog of datasets available via paid 
   subscription, as well as a number of free datasets.
-  * 
+  * It currently contains a bit over 1,000 datasets that can easily be subscribed to. 
 
+<b>Extracting metadata from unstructured data</b>
 
+* Example: real-estate company may capture images of houses for sale; data engineer can create a pipeline that uses 
+  an AI service like Amazon Rekognition to identify objects in the image to identify the type of room (kitchen, 
+  bedroom, etc.) for analytics.
+* Another example: company stores audio recordings of customer service calls; pipeline could be built to create 
+  transcripts of calls with AWS Transcribe, and then use AWS Comprehend to perform sentiment analysis on the 
+  transcript.
+* With modern AI tools, unstructured data can have benefits in analytics environments, especially when combined with 
+  other datasets.
 
+<h3>Working with Change Data Capture (CDC) Data</h3>
 
+* One of the most challenging aspects of working within a data lake environment is the processing of updates to 
+  existing data, such as with <b>Change Data Capture (CDC) Data</b>. This is data that contains updates to an 
+  existing dataset.
+* The first column of the CDC file would contain one of the following characters for each row written to S3 from a 
+  relational database system:
+  * <b>I — Insert</b>: Row contains data that was newly inserted into the table
+  * <b>U — Update</b>: Row contains data that updates an existing record in the table
+  * <b>D — Delete</b>: Row contains data for a record that was deleted from the table
+* Traditionally, it has not been possible to execute updates or deletes of individual records within a data lake. S3 
+  is an object storage, so you can delete and replace a file, but you cannot edit or just replace a portion of a file.
+* You could just append the new records to the existing data, but will end up with multiple copies of the same 
+  record, with each record reflecting the state of that record at a specific point in time. This can show how 
+  history has changed over time, but sometimes users only want to see the current state of each record.
 
+* There are two common approaches to updating data in a data lake: traditional and modern, as explored below.
 
+<h3>Traditional approaches: data upserts and SQL views</h3>
 
+* Traditional approach to dealing with CDC data is to run a transform job, on a schedule, that merges the new CDC 
+  data with the existing dataset, keeping only latest records. This is an "upsert" (update and insert). 
+* One way to do this is with Spark — one DataFrame is existing data, one is new data, merge into new DataFrame based 
+  on custom logic.
+* These are complex, custom transforms that are not generic across all source datasets.
 
+<h3>Modern Approaches: Open Table Formats (OTFs)</h3>
 
+* New OTFs have been developed to create more transactional data lakes.
+  * Transactional data lake = it has properties previously only available in a traditional database, such as the 
+    ability to update and delete individual records.
+  * Many of these also have time travel (to query data as it was at a certain point in time).
+* Technically, these new OTFs bring ACID semantics to the data lake:
+  * <b>Atomicity</b>: Data written will be a full transaction, or not written at all.
+  * <b>Consistency</b>: Even if failure occurs, dataset will stay consistent.
+  * <b>Isolation</b>: One transaction in the dataset will not be affected by another transaction that is requested 
+    at the same time.
+  * <b>Durability</b>: Once successful, a transaction will be durable (permanent, even if there is a later system 
+    failure). 
+* These will not replace OLTP-based databases. Rather, they simplify the ability to apply changes to existing 
+  records and delete records in large datasets in data lakes.
 
+* Examples of OTFs:
+  * Apache Iceberg (Netflix)
+  * Apache Hudi (Uber)
+  * Databricks Delta Lake (Databricks)
+* We'll explore more in chapter 14, which covers building transactional data lakes.
