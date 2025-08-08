@@ -2,10 +2,12 @@ import json
 import os
 import boto3
 from urllib.parse import urlparse
-from datetime import datetime
+from datetime import datetime, timezone
 import asyncio
 from playwright.async_api import async_playwright
+import requests
 
+# Helper function to fetch page content using Playwright
 async def fetch_page_content(url):
     async with async_playwright() as p:
         browser = await p.chromium.launch(
@@ -45,7 +47,9 @@ def lambda_handler(event, context):
         }
     
     try:
-        html_content = asyncio.run(fetch_page_content(url))
+        response = requests.get(url)
+        html_content = response.text.encode('utf-8')
+        # html_content = asyncio.run(fetch_page_content(url))
     except Exception as e:
         return {
             "statusCode": 500,
@@ -57,7 +61,7 @@ def lambda_handler(event, context):
     domain = parsed_url.netloc.replace(".", "") # e.g., "example.com" becomes "examplecom"
 
     # Format date
-    date_str = datetime.now(datetime.timezone.utc).strftime('%Y-%m-%d')
+    date_str = datetime.now(timezone.utc).strftime('%Y-%m-%d')
 
     # Compose S3 key
     key_prefix = f"{date_str}-{domain}-data-scrape"

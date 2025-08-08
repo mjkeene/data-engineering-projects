@@ -47,7 +47,7 @@ class WebScrapeCdkStack(Stack):
                 targets.LambdaFunction(
                     handler=scraper_function,
                     event=events.RuleTargetInput.from_object({
-                        "url": "https://www.cars.com"
+                        "url": "https://en.wikipedia.org/wiki/Ford_F-Series"
                     })
                 )
             ]
