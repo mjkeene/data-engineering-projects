@@ -1,0 +1,16 @@
+employee_id,name,date_joined,department,salary
+1,Alice,2018-05-10,Engineering,85000
+2,Bob,2019-06-12,HR,60000
+3,Charlie,2019-11-15,Engineering,95000
+4,Diana,2020-01-22,Finance,70000
+5,Ethan,2020-03-05,Marketing,50000
+6,Fiona,2020-07-18,Engineering,88000
+7,George,2021-02-10,HR,62000
+8,Hannah,2021-05-20,Finance,72000
+9,Ian,2021-09-30,Marketing,51000
+10,Julia,2022-01-05,Engineering,90000
+11,Kevin,2022-03-15,HR,63000
+12,Laura,2022-06-25,Finance,74000
+13,Mike,2022-10-10,Marketing,52000
+14,Nina,2023-02-18,Engineering,91000
+15,Oscar,2023-06-18,Finance,73000
